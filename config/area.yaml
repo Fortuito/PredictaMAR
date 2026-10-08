@@ -1,0 +1,107 @@
+# =====================================================================
+# Área operativa — PredictaMAR Litoral (Pucusana)
+# =====================================================================
+# Este archivo DECLARA el alcance operativo del proyecto.
+# Hoy NO es consumido por ningún módulo: los fetchers reciben lat/lon como
+# argumentos y construyen su propio recuadro de consulta por punto.
+# Ver `nota_trazabilidad` al final.
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# PUNTO DE REFERENCIA (confirmado)
+# ---------------------------------------------------------------------
+reference_point:
+  name: "Caleta Pucusana"
+  lat: -12.471
+  lon: -76.790
+  source: "DHN - Corrección a las Cartas y Publicaciones Náuticas"
+
+# ---------------------------------------------------------------------
+# ALCANCE OPERATIVO VIGENTE DE PREDICTAMAR LITORAL
+# ---------------------------------------------------------------------
+operational_range_km:
+  min: 0
+  max: 10
+  typical_max_observed: 8
+  fuente_operativa: "Reformulación de alcance de PredictaMAR Litoral (2026), basada en levantamiento operativo con pescadores artesanales; no constituye validación científica del modelo"
+  descripcion: >
+    Distancia MAR ADENTRO DESDE EL LITORAL a la que opera la pesca
+    artesanal: rango de 0 a 10 km, con un máximo habitual aproximado
+    observado de 8 km. Caleta Pucusana se conserva como punto de referencia
+    geográfico del proyecto, pero este alcance NO está definido como un
+    círculo de radio 10 km alrededor de esa coordenada: son geometrías
+    distintas y no deben confundirse. El futuro diseño espacial deberá
+    definir explícitamente cómo se proyecta este alcance sobre coordenadas
+    o sectores concretos.
+  no_confundir_con: >
+    Este alcance tampoco es el recuadro técnico de consulta. Cada fetcher
+    construye su propio recuadro local (±0.05° alrededor del punto
+    solicitado) y aplica sus propios límites internos de selección de celda.
+    Son conceptos independientes: uno describe dónde faena la flota, el otro
+    describe cómo se consulta un producto de datos. No deben mezclarse ni
+    derivarse el uno del otro.
+
+# ---------------------------------------------------------------------
+# RECUADRO GEOGRÁFICO GLOBAL
+# ---------------------------------------------------------------------
+bounding_box:
+  estado: "no_definido"
+  usado_actualmente: false
+  motivo: >
+    Los módulos de ingesta reciben lat/lon en cada llamada y consultan un
+    recuadro local por punto, de modo que hoy no existe ni se necesita un
+    recuadro global del área. Si en el futuro hiciera falta (por ejemplo,
+    para variables derivadas sobre campos espaciales como frentes o
+    gradientes), deberá diseñarse explícitamente y no heredarse de ningún
+    alcance anterior.
+
+# ---------------------------------------------------------------------
+# ESPECIES OBJETIVO
+# ---------------------------------------------------------------------
+species:
+  estado: "confirmada_por_la_responsable_del_proyecto_2026-09-07"
+  lista_interfaz:
+    - ANCHOVETA
+    - JUREL
+    - CABALLA
+    - BONITO
+    - POTA
+    - MERLUZA
+    - LORNA
+    - CABINZA
+    - CHAUCHILLA
+    - PEJERREY
+  taxa_canonicos:
+    anchoveta: "Engraulis ringens"
+    jurel: "Trachurus murphyi"
+    caballa: "Scomber japonicus"
+    bonito: "Sarda chiliensis chiliensis"
+    pota: "Dosidicus gigas"
+    merluza: "Merluccius gayi peruanus"
+    lorna: "Sciaena deliciosa"
+    cabinza: "Isacia conceptionis"
+    pejerrey: "Odontesthes regia"
+  aliases:
+    CHAUCHILLA:
+      canonical_id: bonito
+      scientific_name: "Sarda chiliensis chiliensis"
+      regla: >
+        Se conserva como etiqueta de interfaz por continuidad con el modelo
+        histórico, pero no constituye una décima especie ni recibe pesos
+        independientes. Fuentes oficiales de IMARPE registran "Bonito,
+        chauchilla" bajo el mismo taxón.
+  nota: >
+    La lista conserva las diez etiquetas del modelo histórico confirmadas para
+    revisión. Corresponde a nueve taxa canónicos porque CHAUCHILLA es alias de
+    BONITO. La confirmación de la lista NO activa un índice: aplicabilidad,
+    pesos, faltantes y evidencia se gobiernan por
+    config/species_weighting_v1.yaml.
+
+# ---------------------------------------------------------------------
+# TRAZABILIDAD
+# ---------------------------------------------------------------------
+nota_trazabilidad: >
+  Este archivo declara alcance operativo, pero ningún módulo lo carga ni lo
+  parsea todavía: es documentación, no configuración efectiva. Si en algún
+  momento pasa a ser consumido por el código, ese cambio debe hacerse de
+  forma explícita y verificable, no por suposición.

@@ -1,0 +1,42 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+
+# Secrets
+.env
+.env.*
+*.credentials
+*credentials*
+.copernicusmarine/
+
+# Logs
+*.log
+logs/
+
+# Generated data
+data/demo/*.json
+data/raw/*
+data/processed/*
+
+# Keep folders
+!data/demo/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# OS
+Thumbs.db
+.DS_Store
