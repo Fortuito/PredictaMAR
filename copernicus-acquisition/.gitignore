@@ -1,0 +1,26 @@
+# credenciales y entorno local
+.env
+.venv/
+venv/
+
+# datos: nunca se versionan
+datos/
+*.nc
+*.nc4
+
+# Python y reportes
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+reporte-*.xml
+
+# Salidas operacionales locales
+/evidencia/
+/snapshots/
+/originales/
+/manifiestos/
+/bitacoras/
+/cuarentena/
+/.tmp/
