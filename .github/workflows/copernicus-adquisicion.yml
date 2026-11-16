@@ -1,0 +1,49 @@
+name: Copernicus adquisición
+
+on:
+  schedule:
+    - cron: "17 14 * * *"     # 14:17 UTC (09:17 en Perú), todos los días
+  workflow_dispatch: {}        # ejecución manual desde la pestaña Actions
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adquisicion-copernicus
+  cancel-in-progress: false
+
+jobs:
+  adquisicion:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: copernicus-acquisition
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias fijadas
+        run: pip install -r requirements.lock
+
+      - name: Ejecutar la adquisición
+        env:
+          COPERNICUSMARINE_SERVICE_USERNAME: ${{ secrets.COPERNICUSMARINE_SERVICE_USERNAME }}
+          COPERNICUSMARINE_SERVICE_PASSWORD: ${{ secrets.COPERNICUSMARINE_SERVICE_PASSWORD }}
+          DATA_ROOT: ${{ runner.temp }}/datos
+        run: >
+          python -m acquisition.run
+          --config config/adquisicion.yaml
+          --modo ${{ github.event_name == 'schedule' && 'programada' || 'manual' }}
+
+      - name: Publicar originales, manifiesto y bitácora
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adquisicion-${{ github.run_id }}
+          path: ${{ runner.temp }}/datos
+          retention-days: 90
+          if-no-files-found: warn

@@ -1,0 +1,90 @@
+# Adquisición periódica de datos de Copernicus Marine Service — PredictaMAR, primer entregable.
+# Las variables, productos, profundidades y zonas los define el equipo investigador del proyecto.
+# Agregar o cambiar una zona, una variable o un producto se hace aquí, sin modificar el código.
+version_configuracion: 1
+
+salida:
+  raiz_datos: ${DATA_ROOT}        # carpeta de datos fuera del repositorio
+  zona_horaria: UTC
+
+programacion:
+  ventana_dias: 2                 # los dos últimos días UTC completos
+
+reintentos:
+  maximo: 3                       # reintentos, además del intento inicial
+  esperas_s: [30, 120, 300]
+
+calidad:
+  fraccion_minima_celdas_validas: 0.5   # provisional; lo fija el equipo investigador
+
+zonas:
+  - id: pucusana_costera
+    descripcion: Entorno costero de la caleta (hasta unos 20 km)
+    lat: [-12.62, -12.32]
+    lon: [-76.98, -76.74]
+  - id: pucusana_dominio
+    descripcion: Dominio de evaluacion del motor (malla de 8 a 80 km)
+    lat: [-13.24, -11.95]
+    lon: [-77.62, -76.74]
+
+productos:
+  - id: temperatura_modelo
+    dataset_id: cmems_mod_glo_phy-thetao_anfc_0.083deg_PT6H-i
+    tipo_dato: modelo
+    variables: [thetao]
+    profundidad_m: [0, 12]
+    resolucion: nativa
+    frecuencia_h: 24
+    unidades_esperadas: {thetao: degrees_C}
+    rango_plausible: {thetao: [-3, 40]}
+
+  - id: salinidad_modelo
+    dataset_id: cmems_mod_glo_phy-so_anfc_0.083deg_PT6H-i
+    tipo_dato: modelo
+    variables: [so]
+    profundidad_m: [0, 1]
+    resolucion: nativa
+    frecuencia_h: 24
+    rango_plausible: {so: [0, 45]}
+
+  - id: corrientes_modelo
+    dataset_id: cmems_mod_glo_phy-cur_anfc_0.083deg_PT6H-i
+    tipo_dato: modelo
+    variables: [uo, vo]
+    profundidad_m: [0, 1]
+    resolucion: nativa
+    frecuencia_h: 24
+    rango_plausible: {uo: [-5, 5], vo: [-5, 5]}
+
+  - id: oleaje_modelo
+    dataset_id: cmems_mod_glo_wav_anfc_0.083deg_PT3H-i
+    tipo_dato: modelo
+    variables: [VHM0]
+    resolucion: nativa
+    frecuencia_h: 24
+    rango_plausible: {VHM0: [0, 30]}
+
+  - id: tsm_ostia
+    dataset_id: METOFFICE-GLO-SST-L4-NRT-OBS-SST-V2
+    tipo_dato: analisis_L4
+    variables: [analysed_sst]
+    resolucion: nativa
+    frecuencia_h: 24
+    unidades_esperadas: {analysed_sst: kelvin}
+    rango_plausible: {analysed_sst: [260, 315]}
+
+  - id: clorofila_l3_300m
+    dataset_id: cmems_obs-oc_glo_bgc-plankton_nrt_l3-olci-300m_P1D
+    tipo_dato: observacion_L3
+    variables: [CHL]
+    resolucion: nativa
+    frecuencia_h: 24
+    rango_plausible: {CHL: [0, 1000]}
+
+  - id: clorofila_l4_4km
+    dataset_id: cmems_obs-oc_glo_bgc-plankton_nrt_l4-gapfree-multi-4km_P1D
+    tipo_dato: analisis_L4
+    variables: [CHL]
+    resolucion: nativa
+    frecuencia_h: 24
+    rango_plausible: {CHL: [0, 1000]}

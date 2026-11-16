@@ -1,0 +1,46 @@
+name: Copernicus pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: copernicus-acquisition
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias fijadas
+        run: pip install -r requirements.lock
+
+      - name: Pruebas unitarias e integradas, con cobertura
+        env:
+          COPERNICUSMARINE_SERVICE_USERNAME: ${{ secrets.COPERNICUSMARINE_SERVICE_USERNAME }}
+          COPERNICUSMARINE_SERVICE_PASSWORD: ${{ secrets.COPERNICUSMARINE_SERVICE_PASSWORD }}
+        run: >
+          pytest
+          --cov=acquisition --cov-report=term-missing --cov-report=xml:reporte-cobertura.xml
+          --junitxml=reporte-pruebas.xml
+
+      - name: Publicar el reporte de pruebas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-pruebas-${{ github.run_id }}
+          path: |
+            copernicus-acquisition/reporte-pruebas.xml
+            copernicus-acquisition/reporte-cobertura.xml
+          retention-days: 90
